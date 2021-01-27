@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Anonymous-ChatRoom">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="./static/css/bootstrap.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/vue.min.js"></script>
+</head>
+
+<body>
+    <header class="navbar navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand">Chat Room</a>
+            </div>
+            <nav id="bs-navbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/signout">Leave</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    {% block main %} {% endblock %}
+</body>
+
+</html>

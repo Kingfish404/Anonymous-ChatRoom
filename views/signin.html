@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block main %}
+<style>
+    .container {
+        min-height: 300px;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Chat Room</h1>
+            <p>Power by WebSocket</p>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="alert alert-warning">Please sign in before join the room.
+                </div>
+                <div class="panel-heading">
+                    <h3 class="panel-title">Enter the name then sign in</h3>
+                </div>
+                <div class="panel-body">
+
+                    <form action="/signin" method="post">
+                        <div class="form-group">
+                            <input type="text" name="name" class="form-control" placeholder="你的昵称" value="{{ name }}">
+                        </div>
+                        <br />
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
