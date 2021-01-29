@@ -1,3 +1,6 @@
+'use strict'
+var CryptoJS = require("crypto-js");
+
 const ws = require('ws');
 
 const Cookies = require('cookies');
@@ -16,13 +19,19 @@ const config = require('./config');
 
 const app = new Koa();
 
+
 console.log('runing env:', process.env.NODE_ENV);
+
+const key = Math.random().toString(36).slice(-10);
+
+console.log('key:', key);
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 // log request URL:
 app.use(async (ctx, next) => {
     console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
+    ctx.key = key;
     var
         start = new Date().getTime(),
         execTime;
@@ -73,10 +82,12 @@ function createMessage(type, user, data) {
     });
 }
 
-function createWebSocketServer(server) {
+function createWebSocketServer(server, key) {
     let wss = new WebSocketServer({
         server: server
     })
+
+    wss.key = key;
 
     wss.on('connection', function (ws, req) {
         let name_cookie;
@@ -86,6 +97,8 @@ function createWebSocketServer(server) {
                 name_cookie = parts[1];
             }
         });
+
+        name_cookie.key - this.key;
 
         let user = parseUser(name_cookie);
 
@@ -129,7 +142,10 @@ function parseUser(obj) {
     }
     if (s) {
         try {
-            let user = JSON.parse(Buffer.from(s, 'base64').toString());
+            let decryptbytes = CryptoJS.AES.decrypt(s, key);
+            let decrypttest = decryptbytes.toString(CryptoJS.enc.Utf8);
+            let userjson = Buffer.from(decrypttest, 'base64').toString();
+            let user = JSON.parse(userjson);
             console.log(`User: ${user.name}, ID: ${user.id}`);
             return user;
         } catch (e) {
@@ -179,6 +195,6 @@ function onClose() {
     }
 }
 
-app.wss = createWebSocketServer(server);
+app.wss = createWebSocketServer(server, key);
 
 console.log('app started at port ' + config.setting.port + '...');
